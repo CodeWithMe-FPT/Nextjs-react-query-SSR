@@ -6,15 +6,12 @@ import ListCategoryHydrate from '@/components/ListCategoryHydrate';
 
 export default async function HydratedPost() {
   const queryClient = getQueryClient();
-  await queryClient.prefetchQuery(['list-category'], APIService.listCategory);
+  await queryClient.fetchQuery(['list-category'], APIService.listCategory);
+  setInterval(async () => {
+    await queryClient.fetchQuery(['list-category'], APIService.listCategory);
+    console.log('fetch list category');
+  }, 10000);
   const dehydratedState = dehydrate(queryClient);
-  return (
-    // <Fragment>
-    //   <Hydrate state={dehydratedState}>
-    //     <p>Hydrate</p>
-    //     <ListCategoryHydrate />
-    //   </Hydrate>
-    // </Fragment>
-    <ListCategoryHydrate />
-  );
+
+  return <Hydrate state={dehydratedState}>{/* <ListCategoryHydrate /> */}</Hydrate>;
 }
