@@ -10,23 +10,28 @@ import { useEffect } from 'react';
 //Component for initialData
 export default function ListCategoryHydrate() {
   const fetcher = async () => {
-    let res = await fetch('http://localhost:5000/api/product/list-category');
+    let res: any = await fetch('https://binhminhcooking.store/api/product/list-category');
     res = await res.json();
-    // reHydrate();
     return res;
   };
-  const listCategory: any = useQuery({
+  const { data, refetch } = useQuery({
     queryKey: ['list-category'],
-    queryFn: async () => {
-      const res = await fetcher();
-      return res;
-    },
+    queryFn: fetcher,
+    staleTime: 3000,
     refetchOnWindowFocus: false,
   });
+
+  useEffect(() => {
+    setTimeout(() => {
+      refetch({ queryKey: ['list-category'] });
+    }, 1000);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div className="flex flex-col items-center justify-center w-full">
-      {listCategory.data.length > 0 &&
-        listCategory.data.map((category: any, index: number) => {
+      {data.length > 0 &&
+        data.map((category: any, index: number) => {
           return (
             <p className="text-yellow-400 font-normal text-sm" key={index}>
               {category.name}
